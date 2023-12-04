@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", (e) => {
       .then((res) => res.json())
       .then((version) => {
         const date = new Date();
-        resourceAnchor.setAttribute("href", `shorten/:shortId`);
-        resourceAnchor.innerHTML = `<p>/headerparser/:shortId</p>`;
+        resourceAnchor.setAttribute("href", `shorten/p6Sev5N5rq`);
+        resourceAnchor.innerHTML = `<p>/headerparser/p6Sev5N5rq</p>`;
         endpoints.innerHTML = `   
             <p><span>GET /${getEndpointSegment(version)}/:shortId</span></p>
             <p><span>...</span></p>`;
