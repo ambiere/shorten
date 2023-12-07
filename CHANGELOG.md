@@ -1,4 +1,18 @@
-##  (2023-12-04)
+##  (2023-12-07)
+
+## [0.2.0](https://github.com/zhid0399123/shorten/compare/0.1.0...0.2.0) (2023-12-07)
+
+
+### Features
+
+* **docker-helper:** docker helper module to manage mongo:4 container ([167d44f](https://github.com/zhid0399123/shorten/commit/167d44fad90c94d7b20cd7d9fcf2c4baa0f08848))
+* **run-after:** stops mongo:4 container after tests ([782439f](https://github.com/zhid0399123/shorten/commit/782439fa9e3d7a60806410dac736ecb178f08574))
+* **run-before:** runs mongo:4 container before tests ([2b591b3](https://github.com/zhid0399123/shorten/commit/2b591b37c01c4c53f6119772024258fdae8b04c7))
+
+
+### Bug Fixes
+
+* **index:** removed url destructuring, findOne might return null ([07edd7b](https://github.com/zhid0399123/shorten/commit/07edd7b5c236d15b948465994a8f8e83062b7076))
 
 ## [0.1.0](https://github.com/zhid0399123/shorten/compare/56b71a03318b5116b538a8f52503931e061a0b2d...0.1.0) (2023-12-04)
 
