@@ -34,11 +34,11 @@ router.get("/shorten/:shortId", async function (req, res, next) {
   const shortId = req.params.shortId;
   try {
     const urlCollection = await mongodb.connect();
-    const { url } = await urlCollection.findOne({ urlId: shortId });
-    if (!url) {
+    const response = await urlCollection.findOne({ urlId: shortId });
+    if (!response) {
       return res.status(404).json({ error: "Shortened URL not found :)" });
     }
-    res.redirect(url);
+    res.redirect(response.url);
   } catch (error) {
     next(error);
   }
