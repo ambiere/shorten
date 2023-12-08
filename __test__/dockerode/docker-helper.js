@@ -26,8 +26,9 @@ function dockerConsole() {
     },
     async startContainer(container) {
       const run = await this.getRunningContainer(container);
+      const image = await docker.listImages();
       if (!run) {
-        await pullImage(container);
+        !image.find((_image) => _image.RepoTags[0] === "mongo:4") && (await pullImage(container));
         const containerObj = await docker.createContainer(container);
         await containerObj.start();
       }
@@ -43,13 +44,16 @@ function dockerConsole() {
   async function pullImage(container) {
     const pullStream = await docker.pull(container.Image);
     return await new Promise((resolve, reject) => {
-      docker.modem.followProgress(pullStream, onFinish);
+      docker.modem.followProgress(pullStream, onFinish, onProgress);
       function onFinish(err) {
         if (err) {
           reject(err);
         } else {
           resolve();
         }
+      }
+      function onProgress(data) {
+        // console.log(data.progress);
       }
     });
   }
