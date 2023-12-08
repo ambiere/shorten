@@ -7,5 +7,6 @@ const docker = dockerHelper();
 const { Containers } = dockerHelper;
 
 t.before(async function before() {
+  t.setTimeout(0);
   await docker.startContainer(Containers.mongo);
 });
