@@ -1,27 +1,22 @@
 require("dotenv").config();
 const { MongoClient, ServerApiVersion } = require("mongodb");
 
-const options =
-  process.env.NODE_ENV === "production"
-    ? {
-        serverApi: {
-          version: ServerApiVersion.v1,
-          strict: true,
-          deprecationErrors: true,
-        },
-      }
-    : {};
+const isProduction = process.env.NODE_ENV === "production";
+const serverApiOptions = {
+  version: ServerApiVersion.v1,
+  strict: true,
+  deprecationErrors: true,
+};
+const mongoClientOptions = isProduction ? { serverApi: serverApiOptions } : {};
+const client = new MongoClient(process.env.MONGO_URL, mongoClientOptions);
 
-const client = new MongoClient(process.env.MONGO_URL, options);
-
-async function connect() {
+async function getUrlDatabase() {
   await client.connect();
-  const db = client.db("shorten");
-  return db.collection("url");
+  return client.db("shorten");
 }
 
-async function close() {
+async function closeMongoClient() {
   await client.close();
 }
 
-module.exports = { connect, close };
+module.exports = { getUrlDatabase, closeMongoClient };
