@@ -6,11 +6,11 @@ document.addEventListener("DOMContentLoaded", (e) => {
       .fetch("version")
       .then((res) => res.json())
       .then((version) => {
-        const date = new Date();
-        resourceAnchor.setAttribute("href", `shorten/p6Sev5N5rq`);
-        resourceAnchor.innerHTML = `<p>/headerparser/p6Sev5N5rq</p>`;
+        resourceAnchor.setAttribute("href", `shorten/neSu8VaLfU`);
+        resourceAnchor.innerHTML = `<p>/${getEndpointSegment(version)}/neSu8VaLfU</p>`;
         endpoints.innerHTML = `   
-            <p><span>GET /${getEndpointSegment(version)}/:shortId</span></p>
+            <p><span>POST /${getEndpointSegment(version)}</span></p>
+            <p><span>GET /${getEndpointSegment(version)}/:urlId</span></p>
             <p><span>...</span></p>`;
       });
 
