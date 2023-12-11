@@ -49,3 +49,5 @@ jobs:
         run: pnpm install
       - name: Running tests
         run: pnpm test
+        env:
+          MONGO_URL: mongodb://0.0.0.0:27017/test
