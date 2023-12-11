@@ -1,44 +1,42 @@
 "use strict";
 
-const { Router, json } = require("express");
+const { Router, json, urlencoded } = require("express");
 const pinoHttp = require("pino-http");
+const dns = require("dns");
 const path = require("path");
 const loggerOptions = require("../config/loggerOptions");
-const mongodb = require("../services/mongodb");
-const generateId = require("../util/generateId");
+const collection = require("../services/collection");
+const httpUrl = require("../util/httpUrl");
 const router = Router({ strict: true });
 
 router.use(json());
+router.use(urlencoded({ extended: true }));
 router.use(pinoHttp({ ...loggerOptions }));
 
 router.get("/shorten", async (req, res) => res.sendFile(path.join(__dirname, "../../../", "public/")));
 router.post("/shorten", async function (req, res, next) {
-  const url = req.body.url;
-  try {
-    const urlId = await generateId();
-    const urlCollection = await mongodb.connect();
-    const { acknowledged } = await urlCollection.insertOne({ urlId, url: url });
-    if (!acknowledged) {
-      const error = new Error("Write result not aknowledged :)");
-      throw error;
+  const url = httpUrl(req.body.url);
+  const dnsLookupCallback = async (err) => {
+    try {
+      if (err) throw new Error(err);
+      const urlId = await collection.insertOriginalUrl(url.href);
+      res.json({ original_url: url.href, url_id: urlId });
+    } catch (error) {
+      next(error);
     }
-    res.json({ url, shortenUrl: `https://shorten.fly.dev/v0/api/shorten/${urlId}` });
-  } catch (error) {
-    next(error);
-  } finally {
-    mongodb.close();
-  }
+  };
+  if (url.isValid) dns.lookup(url.host, { all: true }, dnsLookupCallback);
+  else next(url.error);
 });
 
-router.get("/shorten/:shortId", async function (req, res, next) {
-  const shortId = req.params.shortId;
+router.get("/shorten/:urlId", async function (req, res, next) {
   try {
-    const urlCollection = await mongodb.connect();
-    const response = await urlCollection.findOne({ urlId: shortId });
-    if (!response) {
+    const originalUrlDoc = await collection.findOriginalUrl(req.params.urlId);
+    if (!originalUrlDoc) {
       return res.status(404).json({ error: "Shortened URL not found :)" });
+    } else {
+      return res.redirect(302, originalUrlDoc.originalUrl);
     }
-    res.redirect(response.url);
   } catch (error) {
     next(error);
   }
